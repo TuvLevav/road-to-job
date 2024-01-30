@@ -1,13 +1,12 @@
 import pygame
-import board
+
 class Piece():
     def __init__(self, color, position):
         self.color = color
         self.position = position
 
-    def draw_piece(self):
-        pygame.draw.circle(self.screen, self.color, self.position, piece_radius)
-
+    def draw_piece(self, screen, x, y):
+        pygame.draw.circle(screen, self.color, (x, y), 20)
         # Implement logic to draw/render the piece on the game board
         pass
 

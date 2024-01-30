@@ -1,30 +1,41 @@
-import peice
-from typing import List, Tuple, Dict, Union
+from peice import Piece
+from typing import List, Tuple, Dict, Union, Optional
 import pygame
 
 class Board:
-    def __init__(self, rows, columns, piece: Tuple[str,int,int,int]):
+    def __init__(self,width,height, rows, columns, screen):
+        self.screen = screen
         self.rows = rows
+        self.width = width
+        self.height = height
         self.columns = columns
-        #the thrid element in piece tuple represent the color of the piece
-        #0-is non color
-        #1-is x color
-        #2- is y color and so on
-        self.piece = piece
-        self.grid = [[0 for y in range(columns)] for x in range(rows)]
+        self.grid: List[List[Optional[Piece]]] = [[None for y in range(columns)] for x in range(rows)]
         self.initialize_board()
 
     def initialize_board(self):
-        self.screen = pygame.display.set_mode((self.rows,self.columns))
-        pygame.display.set_caption("board game")
-        self.draw_board()
+        self.draw_board(self.screen)
         # Logic to initialize the board with pieces at their starting positions
         pass
 
-    def draw_board(self):
-        # Logic to draw the current state of the board
-        for row in self.grid:
-            print(" ".join(map(str, row)))
+    def draw_board(self,screen):
+        cell_width = self.width // self.columns
+        cell_height = self.height // self.rows
+
+        # Draw horizontal lines
+        for row in range(self.rows + 1):
+            pygame.draw.line(screen, "black", (0, row * cell_height), (self.width, row * cell_height))
+
+        # Draw vertical lines
+        for col in range(self.columns + 1):
+            pygame.draw.line(screen, "black", (col * cell_width, 0), (col * cell_width, self.height))
+
+        # Draw pieces
+        for row_index, row in enumerate(self.grid):
+            for col_index, piece in enumerate(row):
+                if piece:
+                    x = col_index * cell_width + cell_width // 2
+                    y = row_index * cell_height + cell_height // 2
+                    piece.draw_piece(screen, x, y)
 
     def move_piece(self, piece, destination: Tuple[int, int]):
         #TODO using move_piece of the board
