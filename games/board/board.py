@@ -15,7 +15,6 @@ class Board:
     def initialize_board(self):
         self.draw_board(self.screen)
         # Logic to initialize the board with pieces at their starting positions
-        pass
 
     def draw_board(self,screen):
         cell_width = self.width // self.columns
@@ -37,13 +36,20 @@ class Board:
                     y = row_index * cell_height + cell_height // 2
                     piece.draw_piece(screen, x, y)
 
-    def move_piece(self, piece, destination: Tuple[int, int]):
+    def move_piece(self, piece, destination: Tuple[int, int],screen):
         #TODO using move_piece of the board
-        #TODO get the piece out of the borad
+        # Get the current position of the piece
+        cell_width = self.width // self.columns
+        cell_height = self.height // self.rows
+        current_position = piece.get_position()
 
+        # Check if the move is valid
+        if self.is_valid_move(piece, destination):
+        piece.move(destination,screen)
+        self.draw_board(screen)
         #if destination
         # Logic to update the board state after a piece has moved
-        pass
+
 
     def get_piece_at(self, position):
         #TODO return the current positon of the piece
@@ -53,7 +59,15 @@ class Board:
     def is_valid_move(self, piece, destination):
         #TODO
         # Logic to check if a move is valid before applying it to the board
-        pass
+        x, y = destination
+        # Check if the destination is within the board bounds
+        if 0 <= x < self.columns and 0 <= y < self.rows:
+            # Check if the target cell is empty
+            if self.grid[y][x] is None:
+                return True
+
+        return False
+
 
     def remove_piece(self, piece):
         # Logic to remove a piece from the board

@@ -1,39 +1,45 @@
-import board
+# main.py
+
 import pygame
 import sys
 from peice import Piece
+import board
 
 width = 600
 height = 600
 
-# pygame setup
+# Pygame setup
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 running = True
-board = board.Board(width,height,10, 10, screen)
+game_board = board.Board(width, height, 10, 10, screen)
+piece = Piece("red", (0, 0))
 
-board.grid[0][0] =  Piece("red", (0,0))
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Left mouse button
+                # Get the mouse coordinates
+                mouse_x, mouse_y = event.pos
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+                # Convert mouse coordinates to board coordinates
+                cell_width = width // game_board.columns
+                cell_height = height // game_board.rows
+                col_index = mouse_x // cell_width
+                row_index = mouse_y // cell_height
 
-    # RENDER YOUR GAME HERE
+                # Move the piece to the clicked board coordinates
+                piece.move((col_index * cell_width, row_index * cell_height))
 
-    board.draw_board(screen)
+    screen.fill((255, 255, 255))
+    piece.draw_piece(screen)
+    game_board.draw_board(screen)
 
-    # flip() the display to put your work on screen
     pygame.display.flip()
-
-    clock.tick(60)  # limits FPS to 60
+    clock.tick(30)
 
 pygame.quit()
-
-
-
+sys.exit()
